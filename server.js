@@ -30,12 +30,13 @@ app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "/public/index.html"));
 });
 
+//create path for new notes at /api/notes 
 app.post('/api/notes', (req, res) => {
   const newNote = createNewNote(req.body, notes);
   res.json(newNote);
 });
 
-
+// function for new notes
 function createNewNote(body, notesArray) {
   const newNote = body;
   if (!Array.isArray(notesArray)) notesArray = [];
@@ -54,11 +55,13 @@ function createNewNote(body, notesArray) {
   return newNote;
 }
 
-
+// function for deleting notes
 function deleteNote(id, notesArray) {
+  // loop over notes array to match id
   for (let i = 0; i < notesArray.length; i++) {
     let note = notesArray[i];
 
+    // if note id matches delete button, remove from db.json
     if (note.id == id) {
       notesArray.splice(i, 1);
       fs.writeFileSync(
@@ -71,8 +74,9 @@ function deleteNote(id, notesArray) {
   }
 };
 
+// define delete request path
 app.delete("/api/notes/:id", (req, res) => {
-  deleteNote(req.params.id, allNotes);
+  deleteNote(req.params.id, notes);
   res.json(true);
 });
 
