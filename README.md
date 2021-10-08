@@ -11,8 +11,8 @@ This app allows the user to input notes into the text fields with a title and sa
 ## Usage
 
 To use this app, follow the link above for the deployed program. Click on 'Get Started' to go to the note page. Write a title for a new note and some text content, and then click the save icon to save it to the left column. You can delete any note by clicking the trashcan icon next to that note.
-    ![landing page](assets/images/notorious-notes-note-scrnshot.png)
-    ![note page](assets/images/notorious-notes-scrnshot.png)
+    ![landing page](public/assets/images/notorious-notes-note-scrnshot.png)
+    ![note page](public/assets/images/notorious-notes-scrnshot.png)
 ## Credits
 
 I would first like to thank the instructors of UPenn LPS Coding Bootcamp class of 08-2021 for continually putting the students at the top of the importance list. Also, huge thanks to all of the students in class for always collaborating in the slack channel!
