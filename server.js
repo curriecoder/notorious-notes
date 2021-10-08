@@ -1,76 +1,59 @@
 // requiring modules
-const express = require('express');
-
-const app = express();
 const PORT = process.env.PORT || 3001;
 
-require('./routes/routes');
-
-// set data parsing
-app.use(express.urlencoded({ extended: true}));
-app.use(express.json());
-app.use(express.static('public'));
-
-
-// listen at port
-app.listen(PORT, () =>
-  console.log(`Example app listening at http://localhost:${PORT}`)
-);
-
-// requiring modules
 const express = require("express");
+const app = express();
 
 const path = require("path");
 const fs = require("fs");
-const app = express();
+const notes = require("./db/db.json");
 
 
-// use index.html for static display 
-// app.use(express.static("public"));
+// set data parsing
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.static("public"));
 
-app.get("/notes", (req, res) => {
-  res.sendFile(path.join(__dirname, "../public/notes.html"));
-});
-
+// create static path
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../public/index.html"));
+  res.sendFile(path.join(__dirname, "/public/index.html"));
 });
 
-// retrieve existing notes from db/db.json
-fs.readFile("db/db.json", "utf8", (err, data) => {
-  if (err) throw err;
-  
-  let notes = JSON.parse(data);
-  
-  function updateDb() {
-    fs.writeFile("db/db.json", JSON.stringify(notes, '/t'), (err, data) => {
-      if (err) throw err;
-      console.log(data);
-    });
-  }
-  
-  app.get("/api/notes", (req, res) => {
-    res.json(notes);
-  });
-  
-  // write notes to db/db.json
-  app.post("/api/notes", (req, res) => {
-    let newNote = req.body;
-    notes.push(newNote);
-    updateDb();
-    return console.log(`Added note: ${newNote.title}!`);
-  });
+// create /notes path
+app.get("/notes", (req, res) => {
+  res.sendFile(path.join(__dirname, "/public/notes.html"));
+});
 
-  app.get('/api/notes/:id', (req, res) => {
-    res.json(notes[req.params.id]);
-  });
-
-  app.delete('/api/notes/id:', (req, res) => {
-    notes.splice(req.params.id, 1);
-    updateDb();
-    console.log(`Note ${req.params.id} deleted!`);
-  });
+// create /api/notes path
+app.get("/api/notes", (req, res) => {
+  res.json(notes.slice(1));
 });
 
 
-module.exports = app;
+
+function createNewNote(body, notesArray) {
+  const newNote = body;
+  if (!Array.isArray(notesArray)) notesArray = [];
+
+  if (notesArray.length === 0) notesArray.push(0);
+
+  body.id = notesArray[0];
+  notesArray[0]++;
+
+  // push new note to notesArray
+  notesArray.push(newNote);
+  fs.writeFileSync(
+    path.join(__dirname, "./db/db.json"),
+    JSON.stringify(notesArray, null, 2)
+  );
+  return newNote;
+}
+
+app.post('/api/notes', (req, res) => {
+  const newNote = createNewNote(req.body, notes);
+  res.json(newNote);
+})
+
+  // listen at port
+app.listen(PORT, () =>
+  console.log(`App listening at http://localhost:${PORT}`));
