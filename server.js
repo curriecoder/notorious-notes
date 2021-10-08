@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 3001;
 // set data parsing
 app.use(express.urlencoded({ extended: true}));
 app.use(express.json());
-app.use(express.static(__dirname));
+app.use(express.static('public'));
 
 
 // listen at port
