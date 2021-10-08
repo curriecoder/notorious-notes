@@ -15,6 +15,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static("public"));
 
+// create /api/notes path
+app.get("/api/notes", (req, res) => {
+  res.json(notes.slice(1));
+});
+
 // create /notes path
 app.get("/notes", (req, res) => {
   res.sendFile(path.join(__dirname, "/public/notes.html"));
@@ -23,12 +28,6 @@ app.get("/notes", (req, res) => {
 // create static path
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "/public/index.html"));
-});
-
-
-// create /api/notes path
-app.get("/api/notes", (req, res) => {
-  res.json(notes.slice(1));
 });
 
 app.post('/api/notes', (req, res) => {
